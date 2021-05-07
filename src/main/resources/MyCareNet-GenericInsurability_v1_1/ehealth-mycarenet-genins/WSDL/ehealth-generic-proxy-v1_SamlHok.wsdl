@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:err="urn:be:fgov:ehealth:errors:soa:v1" xmlns:genins="urn:be:fgov:ehealth:genericinsurability:protocol:v1" xmlns:soap11="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="GenericInsurabilityWebservice" targetNamespace="urn:be:fgov:ehealth:genericinsurability:protocol:v1">
+	<documentation>Version 1.1</documentation>
+	<wsp:Policy xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="SamlHok">
+    <sp:AsymmetricBinding>
+        <wsp:Policy>
+            <sp:InitiatorToken>
+                <wsp:Policy>
+                    <!-- If the client framework supports sp:IssuedToken policy assertions, uncomment this block and comment the sp:SamlToken assertion -->
+                    <!-- <sp:IssuedToken sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient"> -->
+                    <!-- <sp:RequestSecurityTokenTemplate /> -->
+                    <!-- <wsp:Policy /> -->
+                    <!-- </sp:IssuedToken> -->
+                    <sp:SamlToken sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient">
+                        <wsp:Policy>
+                            <sp:WssSamlV11Token10/>
+                        </wsp:Policy>
+                    </sp:SamlToken>
+                </wsp:Policy>
+            </sp:InitiatorToken>
+            <sp:RecipientToken>
+                <wsp:Policy>
+                    <sp:X509Token sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/Never">
+                        <wsp:Policy>
+                            <sp:WssX509V3Token10/>
+                        </wsp:Policy>
+                    </sp:X509Token>
+                </wsp:Policy>
+            </sp:RecipientToken>
+            <sp:AlgorithmSuite>
+                <wsp:Policy>
+                    <sp:Basic256/>
+                </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+                <wsp:Policy>
+                    <sp:Lax/>
+                </wsp:Policy>
+            </sp:Layout>
+            <sp:IncludeTimestamp/>
+            <sp:ProtectTokens/>
+            <sp:OnlySignEntireHeadersAndBody/>
+        </wsp:Policy>
+    </sp:AsymmetricBinding>
+    <sp:Wss10>
+        <wsp:Policy>
+            <sp:MustSupportRefKeyIdentifier/>
+            <sp:MustSupportRefIssuerSerial/>
+        </wsp:Policy>
+    </sp:Wss10>
+    <sp:SignedParts>
+        <sp:Body/>
+    </sp:SignedParts>
+</wsp:Policy>
+  <types>
+		<xsd:schema>
+			<xsd:import namespace="urn:be:fgov:ehealth:genericinsurability:protocol:v1" schemaLocation="../XSD/ehealth-genins-protocol-1_1.xsd"/>
+			<xsd:import namespace="urn:be:fgov:ehealth:errors:soa:v1" schemaLocation="../../ehealth-errors/XSD/ehealth-errors-schema-soa-1_1.xsd"/>
+		</xsd:schema>
+	</types>
+	<message name="GetInsurabilityRequest">
+		<part element="genins:GetInsurabilityRequest" name="body"/>
+	</message>
+	<message name="GetInsurabilityResponse">
+		<part element="genins:GetInsurabilityResponse" name="body"/>
+	</message>
+	<message name="GetInsurabilityAsFlatRequest">
+		<part element="genins:GetInsurabilityAsFlatRequest" name="body"/>
+	</message>
+	<message name="GetInsurabilityAsFlatResponse">
+		<part element="genins:GetInsurabilityAsFlatResponse" name="body"/>
+	</message>
+	<message name="SystemError">
+		<part element="err:SystemError" name="fault"/>
+	</message>
+	<portType name="GenericInsurabilityPortType">
+		<operation name="getInsurability">
+			<input message="genins:GetInsurabilityRequest"/>
+			<output message="genins:GetInsurabilityResponse"/>
+			<fault message="genins:SystemError" name="SystemError"/>
+		</operation>
+		<operation name="getInsurabilityAsFlat">
+			<input message="genins:GetInsurabilityAsFlatRequest"/>
+			<output message="genins:GetInsurabilityAsFlatResponse"/>
+			<fault message="genins:SystemError" name="SystemError"/>
+		</operation>
+	</portType>
+	<binding name="GenericInsurabilitySoapBinding" type="genins:GenericInsurabilityPortType">
+		<soap11:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="getInsurability">
+			<soap11:operation soapAction="urn:be:fgov:ehealth:genericinsurability:protocol:v1:GetInsurability" style="document"/>
+			<input>
+				<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#SamlHok"/>
+        <soap11:body use="literal"/>
+			</input>
+			<output>
+				<soap11:body use="literal"/>
+			</output>
+			<fault name="SystemError">
+				<soap11:fault name="SystemError" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="getInsurabilityAsFlat">
+			<soap11:operation soapAction="urn:be:fgov:ehealth:genericinsurability:protocol:v1:GetInsurabilityAsFlat" style="document"/>
+			<input>
+				<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#SamlHok"/>
+        <soap11:body use="literal"/>
+			</input>
+			<output>
+				<soap11:body use="literal"/>
+			</output>
+			<fault name="SystemError">
+				<soap11:fault name="SystemError" use="literal"/>
+			</fault>
+		</operation>
+	</binding>
+	<service name="GenericInsurabilityService">
+		<port binding="genins:GenericInsurabilitySoapBinding" name="GenericInsurabilityServiceSOAP11">
+			<soap11:address location="https://services.ehealth.fgov.be/GenericInsurability/v1"/>
+		</port>
+	</service>
+</definitions>
