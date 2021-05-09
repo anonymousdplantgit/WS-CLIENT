@@ -14,7 +14,13 @@
     <name>ws-client</name>
     <description>Demo project for Spring Boot</description>
     <properties>
-        <cxf.version>3.4.0</cxf.version>
+        <cxf.version>3.3.4</cxf.version>
+        <cxf-ts.version>3.3.0</cxf-ts.version>
+        <jaxb2-basics-runtime.version>1.11.1</jaxb2-basics-runtime.version>
+        <jaxb-xew-plugin.version>1.11</jaxb-xew-plugin.version>
+        <javax-jaxws.version>2.3.1</javax-jaxws.version>
+        <saaj-impl.version>1.5.1</saaj-impl.version>
+        <jaxws-ri.version>2.3.2</jaxws-ri.version>
         <node.version>v14.16.1</node.version>
         <java.version>1.8</java.version>
     </properties>
@@ -31,9 +37,59 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
+        <!-- CXF Framework -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web-services</artifactId>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <!-- Required if you need to log the request/response -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-features-logging</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http-hc</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf.xjcplugins</groupId>
+            <artifactId>cxf-xjc-ts</artifactId>
+            <version>${cxf-ts.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet.jaxb2_commons</groupId>
+            <artifactId>jaxb2-basics-runtime</artifactId>
+            <version>${jaxb2-basics-runtime.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.12.3</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.dozer</groupId>
+            <artifactId>dozer</artifactId>
+            <version>5.5.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.20</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
@@ -51,8 +107,12 @@
                             <sourceRoot>${project.build.directory}/generated/cxf</sourceRoot>
                             <wsdlOptions>
                                 <wsdlOption>
-                                    <wsdl>${basedir}/src/main/resources/MyCareNet-GenericInsurability_v1_1/ehealth-mycarenet-genins/WSDL/ehealth-generic-proxy-v1.wsdl</wsdl>
+                                    <wsdl>${basedir}/src/main/resources/MyCareNet-GenericInsurability_v1_1/ehealth-mycarenet-genins/WSDL/ehealth-generic-proxy-v1_SamlHok.wsdl</wsdl>
                                 </wsdlOption>
+                                <wsdlOption>
+                                    <wsdl>${basedir}/src/main/resources/IAM-STS-Saml11TokenService_v1_2/ehealth-iam/WSDL/ehealth-iam-sts-saml1-v1.wsdl</wsdl>
+                                </wsdlOption>
+
                             </wsdlOptions>
                         </configuration>
                         <goals>

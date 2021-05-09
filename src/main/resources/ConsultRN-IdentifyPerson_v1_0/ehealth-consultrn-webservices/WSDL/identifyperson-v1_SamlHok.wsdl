@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:crnp="urn:be:fgov:ehealth:consultRN:1_0:protocol" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://ehealth.fgov.be/consultRN/searchPersonBySSIN/v1_0/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="searchPersonBySSIN" targetNamespace="http://ehealth.fgov.be/consultRN/searchPersonBySSIN/v1_0/">
+	<wsdl:documentation>Version 1.0</wsdl:documentation>
+  
+	<wsp:Policy xmlns:sp="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="SamlHok">
+    <sp:AsymmetricBinding>
+        <wsp:Policy>
+            <sp:InitiatorToken>
+                <wsp:Policy>
+                    <!-- If the client framework supports sp:IssuedToken policy assertions, uncomment this block and comment the sp:SamlToken assertion -->
+                    <!-- <sp:IssuedToken sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient"> -->
+                    <!-- <sp:RequestSecurityTokenTemplate /> -->
+                    <!-- <wsp:Policy /> -->
+                    <!-- </sp:IssuedToken> -->
+                    <sp:SamlToken sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/AlwaysToRecipient">
+                        <wsp:Policy>
+                            <sp:WssSamlV11Token10/>
+                        </wsp:Policy>
+                    </sp:SamlToken>
+                </wsp:Policy>
+            </sp:InitiatorToken>
+            <sp:RecipientToken>
+                <wsp:Policy>
+                    <sp:X509Token sp:IncludeToken="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200702/IncludeToken/Never">
+                        <wsp:Policy>
+                            <sp:WssX509V3Token10/>
+                        </wsp:Policy>
+                    </sp:X509Token>
+                </wsp:Policy>
+            </sp:RecipientToken>
+            <sp:AlgorithmSuite>
+                <wsp:Policy>
+                    <sp:Basic256/>
+                </wsp:Policy>
+            </sp:AlgorithmSuite>
+            <sp:Layout>
+                <wsp:Policy>
+                    <sp:Lax/>
+                </wsp:Policy>
+            </sp:Layout>
+            <sp:IncludeTimestamp/>
+            <sp:ProtectTokens/>
+            <sp:OnlySignEntireHeadersAndBody/>
+        </wsp:Policy>
+    </sp:AsymmetricBinding>
+    <sp:Wss10>
+        <wsp:Policy>
+            <sp:MustSupportRefKeyIdentifier/>
+            <sp:MustSupportRefIssuerSerial/>
+        </wsp:Policy>
+    </sp:Wss10>
+    <sp:SignedParts>
+        <sp:Body/>
+    </sp:SignedParts>
+</wsp:Policy>
+  <wsdl:types>
+    	<xsd:schema targetNamespace="http://ehealth.fgov.be/consultRN/searchPersonBySSIN/v1_0/">
+    		<xsd:import namespace="urn:be:fgov:ehealth:consultRN:1_0:protocol" schemaLocation="../XSD/ehealth-consultrn-webservices-protocol-1_0.xsd">
+			</xsd:import>
+		</xsd:schema>
+	</wsdl:types>
+	
+	<wsdl:message name="bySSINRequest">
+		<wsdl:part element="crnp:SearchBySSINRequest" name="request"/>
+	</wsdl:message>
+	<wsdl:message name="bySSINResponse">
+		<wsdl:part element="crnp:SearchBySSINReply" name="response"/>
+	</wsdl:message>
+    
+    <wsdl:portType name="searchPersonBySSINPortType">
+    	<wsdl:operation name="search">
+    		<wsdl:input message="tns:bySSINRequest"/>
+    		<wsdl:output message="tns:bySSINResponse"/>
+    	</wsdl:operation>
+    </wsdl:portType>
+    
+    <wsdl:binding name="searchPersonBySSINSoap" type="tns:searchPersonBySSINPortType">
+    	<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    	<wsdl:operation name="search">
+    		<soap:operation soapAction="http://ehealth.fgov.be/consultRN/identifyPerson/searchPersonBySSIN/search" style="document"/>
+    		<wsdl:input>
+    			<wsp:PolicyReference xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" URI="#SamlHok"/>
+        <soap:body use="literal"/>
+    		</wsdl:input>
+    		<wsdl:output>
+    			<soap:body use="literal"/>
+    		</wsdl:output>
+    	</wsdl:operation>
+    </wsdl:binding>
+    
+    <wsdl:service name="searchPersonBySSIN">
+		<wsdl:port binding="tns:searchPersonBySSINSoap" name="searchPersonBySSIN">
+			<soap:address location="https://services-acpt.ehealth.fgov.be/consultRN/identifyPerson/v1"/>
+		</wsdl:port>
+	</wsdl:service>
+	
+</wsdl:definitions>
